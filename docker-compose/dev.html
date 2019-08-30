@@ -1,0 +1,13 @@
+version: "3"
+
+networks:
+  serve_report:
+    driver: bridge
+
+services:
+  mongo:
+    image: mongo:latest
+    networks:
+      - serve_report
+    ports:
+      - 27017:27017
