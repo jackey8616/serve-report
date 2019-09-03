@@ -45,8 +45,13 @@ func (fh *FileHandler) createFile(name string) (*os.File, error) {
 }
 
 // SaveUploadedFile : Write uploaded file into specifiec location.
-func (fh *FileHandler) SaveUploadedFile(repoName, branchName, fileName *string, file *multipart.File) (*string, error) {
-	tarFilePath := fmt.Sprintf("%s/%s/%s/tar/%s", *fh.repoPath, *repoName, *branchName, *fileName)
+func (fh *FileHandler) SaveUploadedFile(repoName, branchName, tagName, fileName *string, file *multipart.File) (*string, error) {
+	tarFilePath := ""
+	if *tagName == "" {
+		tarFilePath = fmt.Sprintf("%s/%s/%s/tar/%s", *fh.repoPath, *repoName, *branchName, *fileName)
+	} else {
+		tarFilePath = fmt.Sprintf("%s/%s/%s/tar/%s/%s", *fh.repoPath, *repoName, *branchName, *tagName, *fileName)
+	}
 	f, err := fh.createFile(tarFilePath)
 	if err != nil {
 		return nil, err
@@ -58,8 +63,13 @@ func (fh *FileHandler) SaveUploadedFile(repoName, branchName, fileName *string, 
 }
 
 // UnTarGzipHTML : Unzip a tar.gz format compresed file which contain HTML.
-func (fh *FileHandler) UnTarGzipHTML(tarFilePath, repoName, branchName, commit *string) error {
-	htmlPath := fmt.Sprintf("%s/%s/%s/html/%s/", *fh.repoPath, *repoName, *branchName, *commit)
+func (fh *FileHandler) UnTarGzipHTML(tarFilePath, repoName, branchName, tagName, commit *string) error {
+	htmlPath := ""
+	if *tagName == "" {
+		htmlPath = fmt.Sprintf("%s/%s/%s/html/%s/", *fh.repoPath, *repoName, *branchName, *commit)
+	} else {
+		htmlPath = fmt.Sprintf("%s/%s/%s/html/%s/%s/", *fh.repoPath, *repoName, *branchName, *tagName, *commit)
+	}
 	file, err := os.Open(*tarFilePath)
 	if err != nil {
 		return err

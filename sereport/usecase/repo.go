@@ -24,13 +24,13 @@ func NewRepoUsecase(inf *entity.MongoInf, fileHandler *fhdl.FileHandler) *RepoUs
 }
 
 // UploadTarGzip : Process uploaded file from API route.
-func (ru *RepoUsecase) UploadTarGzip(repoName, branchName, commit *string, uploadedFile *multipart.File) error {
+func (ru *RepoUsecase) UploadTarGzip(repoName, branchName, commit, tag *string, uploadedFile *multipart.File) error {
 	fileName := fmt.Sprintf("%s.tar.gz", *commit)
-	tarFilePath, err := ru.fileHandler.SaveUploadedFile(repoName, branchName, &fileName, uploadedFile)
+	tarFilePath, err := ru.fileHandler.SaveUploadedFile(repoName, branchName, tag, &fileName, uploadedFile)
 	if err != nil {
 		return err
 	}
-	if err := ru.fileHandler.UnTarGzipHTML(tarFilePath, repoName, branchName, commit); err != nil {
+	if err := ru.fileHandler.UnTarGzipHTML(tarFilePath, repoName, branchName, tag, commit); err != nil {
 		return err
 	}
 	return nil

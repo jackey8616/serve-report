@@ -42,6 +42,7 @@ func (ar *APIRepo) html(w http.ResponseWriter, req *http.Request) {
 	repoName := req.Form.Get("name")
 	branchName := req.Form.Get("branch")
 	commit := req.Form.Get("commit")
+	tag := req.Form.Get("tag")
 
 	file, _, err := req.FormFile("tar")
 	if err != nil {
@@ -50,7 +51,7 @@ func (ar *APIRepo) html(w http.ResponseWriter, req *http.Request) {
 	}
 	defer file.Close()
 
-	if err := ar.repoUsecase.UploadTarGzip(&repoName, &branchName, &commit, &file); err != nil {
+	if err := ar.repoUsecase.UploadTarGzip(&repoName, &branchName, &commit, &tag, &file); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
